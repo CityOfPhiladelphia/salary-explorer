@@ -1,7 +1,10 @@
-var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
-    ,FusionTable = FusionTable || {}
-    ,util = util || {};
-(function(app, db, util, $, _) {
+window.jQuery = window.jQuery || {};
+window._ = window._ || {};
+window.Backbone = window.Backbone || {};
+window.Salaries = window.Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}};
+window.FusionTable = window.FusionTable || {};
+window.util = window.util || {};
+(function(window, $, _, Backbone, app, db, util) {
     
     // TODO: Since this is not paginated, sorting should be done with javascript
     app.Collections.Departments = Backbone.Collection.extend({
@@ -26,13 +29,13 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
                     i = 0;
                     for(i in row) {
                         key = self.settings.fields[i];
-                        object[key] = (key === "salaries" || key === "count" ? parseInt(row[i]) : row[i]);
+                        object[key] = (key === "salaries" || key === "count" ? parseInt(row[i], 0) : row[i]);
                     }
                     objects.push(object);
                     
                     // Add to the totals
-                    self.count += object["count"] || 0;
-                    self.sum += object["salaries"] || 0;
+                    self.count += object.count || 0;
+                    self.sum += object.salaries || 0;
                 });
             }
             return objects;
@@ -41,7 +44,7 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
     
     app.Views.DepartmentsView = Backbone.View.extend({
         initialize: function() {
-            _.bindAll(this, "toggleRow")
+            _.bindAll(this, "toggleRow");
             this.collection = this.options.collection;
             this.template = _.template($("#tmpl-departments").html());
             this.collection.on("reset", this.render, this);
@@ -78,4 +81,4 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
         }
     });
     
-})(Salaries, FusionTable, util, jQuery, _);
+})(window, window.jQuery, window._, window.Backbone, window.Salaries, window.FusionTable, window.util);

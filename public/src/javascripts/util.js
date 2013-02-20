@@ -1,14 +1,17 @@
-var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
-    ,util = util || {};
-(function(app, util, $, _) {
+window.jQuery = window.jQuery || {};
+window._ = window._ || {};
+window.Salaries = window.Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}};
+window.util = window.util || {};
+(function(window, $, _, app, util) {
+    
     util.loading = function(status) {
         $("body").toggleClass("loading", status);
     };
     
     util.currency = function(sSymbol, vValue, decimals) {
-	   var aDigits = vValue.toFixed(decimals || 0).split(".");
-	   aDigits[0] = aDigits[0].split("").reverse().join("").replace(/(\d{3})(?=\d)/g, "$1,").split("").reverse().join("");
-	   return sSymbol + aDigits.join(".");
+        var aDigits = vValue.toFixed(decimals || 0).split(".");
+        aDigits[0] = aDigits[0].split("").reverse().join("").replace(/(\d{3})(?=\d)/g, "$1,").split("").reverse().join("");
+        return sSymbol + aDigits.join(".");
 	};
     
     /*util.getSortProps = function(settings) {
@@ -34,7 +37,7 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
             };
         }
         return sortProps;
-    }
+    };
     
     /*util.getArrows = function(settings) {
         var arrows = {}, i = 0;
@@ -47,4 +50,5 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
     util.reverseDir = function(dir) {
         return dir === "asc" ? "desc" : "asc";
     }*/
-})(Salaries, util, jQuery, _);
+    
+})(window, window.jQuery, window._, window.Salaries, window.util);

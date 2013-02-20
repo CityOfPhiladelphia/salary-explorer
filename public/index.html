@@ -19,8 +19,8 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<a class="brand" href="#"><img src="http://www.phila.gov/Map/Content/Images/cityLogo-31px.png"></a>
-				<span class="hidden-phone"><a class="brand" href="#"><img src="http://www.phila.gov/mdo/phillyrising/img/cityLogoMark-145-30.png"></a></span>
+				<a class="brand" href="#"><img src="img/cityLogo-31px.png"></a>
+				<span class="hidden-phone"><a class="brand" href="#"><img src="img/cityLogoMark-145-30.png"></a></span>
 				<div class="nav-collapse collapse">
 					<ul class="nav">
 						<li><a title="Visit The City's Homepage" href="http://www.phila.gov"><i class="icon-home icon-white"></i></a></li>
@@ -147,14 +147,14 @@
                 <tbody>
                 </tbody>
             </table>
-            <button class="btn btn-large btn-block more" data-loading-text="Loading...">More</button>
-            <% if(data.settings.search !== undefined && data.settings.department !== undefined) { %>
-                <div class="alert alert-info">You just searched through <%= data.title %>. Did you mean to search through <a href="#<%= Salaries.router.buildFragment("employees", {}, ["search"]) %>">All Employees</a>?</div>
-            <% } %>
+            <button class="btn btn-large btn-block more" data-loading-text="Loading..." data-error-text="Error">More</button>
         <% } else if(data.error) { %>
             <div class="alert alert-error"><%= data.error %></div>
         <% } else { %>
-            <div class="alert no-results">No results found</div>
+            <div class="alert hide-loading">No results found</div>
+        <% } %>
+        <% if(data.settings.search !== undefined && data.settings.department !== undefined) { %>
+            <div class="alert alert-info hide-loading">You just searched through <%= data.title %>. Did you mean to search through <a href="#<%= Salaries.router.buildFragment("employees", {}, ["search"]) %>">All Employees</a>?</div>
         <% } %>
     </script>
     
@@ -208,7 +208,7 @@
     <script src="lib/javascripts/jquery.jsonp.js"></script>
     <script src="src/javascripts/codes.js"></script>
     <script src="src/javascripts/util.js"></script>
-    <script src="src/javascripts/db.js"></script>
+    <script src="src/javascripts/fusiontable.js"></script>
     <script src="src/javascripts/department.js"></script>
     <script src="src/javascripts/employee.js"></script>
     <script src="src/javascripts/salarygroup.js"></script>

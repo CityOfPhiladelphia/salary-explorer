@@ -1,12 +1,15 @@
-var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
-    ,FusionTable = FusionTable || {}
-    ,util = util || {};
-(function(app, db, util, $, _) {
+window.jQuery = window.jQuery || {};
+window._ = window._ || {};
+window.Backbone = window.Backbone || {};
+window.Salaries = window.Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}};
+window.FusionTable = window.FusionTable || {};
+window.util = window.util || {};
+(function(window, $, _, Backbone, app, db, util) {
     
     /**
      * Config
      */
-    DEBUG = true; // Global
+    window.DEBUG = true; // Global
     _.templateSettings.variable = "data";
     $.ajaxSetup({cache: false}); // Cache ajax requests
     
@@ -18,7 +21,7 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
             this.$el.html(this.template);
             return this;
         }
-    })
+    });
     
     app.Routers.AppRouter = Backbone.Router.extend({
         routes: {
@@ -79,7 +82,7 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
         ,setParams: function(params) {
             this.params = _.clone(params);
         }
-    })
+    });
     
     /**
      * Executed Immediately
@@ -94,6 +97,6 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
     $(document).on("click", "[data-replace=\"true\"]", function(e) {
         e.preventDefault();
         app.router.navigate($(this).attr("href"), {trigger: true, replace: true});
-    })
+    });
     
-})(Salaries, FusionTable, util, jQuery, _);
+})(window, window.jQuery, window._, window.Backbone, window.Salaries, window.FusionTable, window.util);

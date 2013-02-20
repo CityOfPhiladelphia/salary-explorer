@@ -1,7 +1,10 @@
-var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
-    ,FusionTable = FusionTable || {}
-    ,util = util || {};
-(function(app, db, util, $, _) {
+window.jQuery = window.jQuery || {};
+window._ = window._ || {};
+window.Backbone = window.Backbone || {};
+window.Salaries = window.Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}};
+window.FusionTable = window.FusionTable || {};
+window.util = window.util || {};
+(function(window, $, _, Backbone, app, db, util) {
     
     app.Collections.SalaryGroups = Backbone.Collection.extend({
         defaultSettings: {
@@ -95,4 +98,4 @@ var Salaries = Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}}
         }
     });
     
-})(Salaries, FusionTable, util, jQuery, _);
+})(window, window.jQuery, window._, window.Backbone, window.Salaries, window.FusionTable, window.util);
