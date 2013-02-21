@@ -69,14 +69,14 @@ window.util = window.util || {};
             //row.find("td").eq(0).append((new app.Views.SalaryGroupsView({collection: salaryGroups})).render().el);
         }
         ,render: function() {
-            this.$el.html(this.template({
+            this.$el.html(this.template(/*{
                 rows: this.collection.toJSON()
                 ,sum: this.collection.sum
                 ,count: this.collection.count
                 ,settings: this.collection.settings
                 ,sortProps: util.getSortProps(this.collection.settings, "departments")
                 //,arrows: util.getArrows(this.collection.settings)
-            }));
+            }*/));
             return this;
         }
     });
