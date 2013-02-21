@@ -311,3 +311,4 @@
 {"ts":1361458057741,"patch":[[{"diffs":[[0,"ate("],[-1,"\"employees?orderby=title\""],[1,"$(this).attr(\"href\")"],[0,", {t"]],"start1":3980,"start2":3980,"length1":33,"length2":28}]],"length":4155,"saved":false}
 {"ts":1361458087940,"patch":[[{"diffs":[[0,"igate($("],[-1,"this"],[1,"e.currentTarget"],[0,").attr(\""]],"start1":3978,"start2":3978,"length1":20,"length2":31}]],"length":4166,"saved":false}
 {"ts":1361458945799,"patch":[[{"diffs":[[0,"(\"href\")"],[1,".replace(/^#/, \"\")"],[0,", {trigg"]],"start1":4007,"start2":4007,"length1":16,"length2":34}]],"length":4184,"saved":false}
+{"ts":1361459098718,"patch":[[{"diffs":[[0,"DEBUG = "],[-1,"tru"],[1,"fals"],[0,"e; // Gl"]],"start1":374,"start2":374,"length1":19,"length2":20},{"diffs":[[0,"tDefault();\n"],[1,"        console.log($(e.currentTarget).attr(\"href\").replace(/^#/, \"\"));\n"],[0,"        app."]],"start1":3945,"start2":3945,"length1":24,"length2":96}]],"length":4257,"saved":false}

@@ -9,7 +9,7 @@ window.util = window.util || {};
     /**
      * Config
      */
-    window.DEBUG = true; // Global
+    window.DEBUG = false; // Global
     _.templateSettings.variable = "data";
     $.ajaxSetup({cache: false}); // Cache ajax requests
     
@@ -98,6 +98,7 @@ window.util = window.util || {};
      */
     $(document).on("click", "[data-replace=\"true\"]", function(e) {
         e.preventDefault();
+        console.log($(e.currentTarget).attr("href").replace(/^#/, ""));
         app.router.navigate($(e.currentTarget).attr("href").replace(/^#/, ""), {trigger: true, replace: true});
     });
     
