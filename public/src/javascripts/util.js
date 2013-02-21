@@ -30,12 +30,12 @@ window.util = window.util || {};
     
     util.getSortProps = function(settings, route) {
         var sortProps = {}, i = 0;
-        for(i in settings.fields) {
+        /*for(i in settings.fields) {
             sortProps[settings.fields[i]] = {
                 href: app.router.buildFragment(route, {orderby: settings.fields[i], dir: (settings.orderby === settings.fields[i] ? (settings.dir === "asc" ? "desc" : "asc") : "asc")}, ["department", "search"])
                 ,arrow: settings.orderby === settings.fields[i] ? settings.dir : null
             };
-        }
+        }*/
         return sortProps;
     };
     
