@@ -60,36 +60,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="all">
-                        <td data-title="Analysis"><button class="btn btn-mini toggle"><i class="icon-plus"></i></button></td>
-                        <td data-title="Department"><a href="#employees">ALL EMPLOYEES</a></td>
-                        <td data-title="Employees"><%= data.count %></td>
-                        <td data-title="Salaries"><%= util.currency("$", data.sum) %></td>
-                    </tr>
-                    <tr class="analysis">
-                        <td colspan="4"></td>
-                    </tr>
-                <% _.each(data.rows, function(row) { %>
-                    <% var count = Math.round(row.count/data.count*100*100)/100; %>
-                    <% var salaries = Math.round(row.salaries/data.sum*100*100)/100; %>
-                    <tr>
-                        <td data-title="Analysis"><button class="btn btn-mini toggle"><i class="icon-plus"></i></button></td>
-                        <td data-title="Department"><a href="#employees?department=<%= row.departmentid %>"><%= row.department %></a></td>
-                        <td data-title="Employees"><%= row.count %></td>
-                        <td data-title="Salaries"><%= util.currency("$", row.salaries) %></td>
-                    </tr>
-                    <tr class="analysis" data-department="<%= row.departmentid %>">
-                        <td colspan="4">
-                            This department houses <%= count %>% of the City's employees and receives <%= salaries %>% of the City's salary dollars.
-                            <div class="progress">
-                                <div class="bar" style="width: <%= count %>%;"><%= count %>%</div>
-                            </div>
-                            <div class="progress">
-                                <div class="bar" style="width: <%= salaries %>%;"><%= salaries %>%</div>
-                            </div>
-                        </td>
-                    </tr>
-                <% }); %>
                 </tbody>
             </table>
         <% } %>
