@@ -43,6 +43,56 @@
             <li><a href="#">HOME</a> <span class="divider">/</span></li>
             <li class="active">DEPARTMENTS</li>
         </ul>
+        <% if(data.rows !== undefined && data.rows.length) { %>
+            <% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; }; %>
+            <table class="table table-condensed table-striped-skip no-more-tables">
+                <thead>
+                    <tr>
+                        <th colspan="2"><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
+                            <%= icon(data.sortProps.department.arrow) %>
+                        </a></th>
+                        <th><a href="#<%= data.sortProps.count.href %>" data-replace="true">Employees
+                            <%= icon(data.sortProps.count.arrow) %>
+                        </a></th>
+                        <th><a href="#<%= data.sortProps.salaries.href %>" data-replace="true">Salaries
+                            <%= icon(data.sortProps.salaries.arrow) %>
+                        </a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="all">
+                        <td data-title="Analysis"><button class="btn btn-mini toggle"><i class="icon-plus"></i></button></td>
+                        <td data-title="Department"><a href="#employees">ALL EMPLOYEES</a></td>
+                        <td data-title="Employees"><%= data.count %></td>
+                        <td data-title="Salaries"><%= util.currency("$", data.sum) %></td>
+                    </tr>
+                    <tr class="analysis">
+                        <td colspan="4"></td>
+                    </tr>
+                <% _.each(data.rows, function(row) { %>
+                    <% var count = Math.round(row.count/data.count*100*100)/100; %>
+                    <% var salaries = Math.round(row.salaries/data.sum*100*100)/100; %>
+                    <tr>
+                        <td data-title="Analysis"><button class="btn btn-mini toggle"><i class="icon-plus"></i></button></td>
+                        <td data-title="Department"><a href="#employees?department=<%= row.departmentid %>"><%= row.department %></a></td>
+                        <td data-title="Employees"><%= row.count %></td>
+                        <td data-title="Salaries"><%= util.currency("$", row.salaries) %></td>
+                    </tr>
+                    <tr class="analysis" data-department="<%= row.departmentid %>">
+                        <td colspan="4">
+                            This department houses <%= count %>% of the City's employees and receives <%= salaries %>% of the City's salary dollars.
+                            <div class="progress">
+                                <div class="bar" style="width: <%= count %>%;"><%= count %>%</div>
+                            </div>
+                            <div class="progress">
+                                <div class="bar" style="width: <%= salaries %>%;"><%= salaries %>%</div>
+                            </div>
+                        </td>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        <% } %>
     </script>
     
     <script type="text/template" id="tmpl-employees">
