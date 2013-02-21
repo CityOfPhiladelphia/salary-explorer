@@ -72,7 +72,7 @@ window.util = window.util || {};
          */
         ,buildFragment: function(route, add, preserve) {
             //return _.defaults(add || {}, remove !== undefined && remove.length ? _.omit(this.params, remove) : this.params);
-            var newParams = preserve !== undefined && preserve.length && this.params !== undefined ? _.extend(add, _.pick(this.params, preserve)) : add;
+            var newParams = preserve !== undefined && preserve.length && this.params !== undefined ? _.extend(add, _.pick(this.params, preserve[0])) : add;
             return (route || "") + ( ! _.isEmpty(newParams) ? "?" + $.param(newParams) : "");
         }
         /*
