@@ -33,7 +33,7 @@ window.util = window.util || {};
         //for(i in settings.fields) {
         _.each(settings.fields, function(field) {
             sortProps[field] = {
-                href: app.router.buildFragment(route, {})//{orderby: field, dir: (settings.orderby === field ? (settings.dir === "asc" ? "desc" : "asc") : "asc")}, ["department", "search"])
+                href: app.router.buildFragment(route, {orderby: field, dir: (settings.orderby === field ? (settings.dir === "asc" ? "desc" : "asc") : "asc")})//, ["department", "search"])
                 ,arrow: settings.orderby === field ? settings.dir : null
             };
         });
