@@ -64,9 +64,9 @@ window.util = window.util || {};
             button.find("i").toggleClass("icon-plus").toggleClass("icon-minus");
             
             // Load salary groups
-            //var salaryGroups = new app.Collections.SalaryGroups(null, {settings: {department: row.data("department")}});
-            //salaryGroups.fetch();
-            //row.find("td").eq(0).append((new app.Views.SalaryGroupsView({collection: salaryGroups})).render().el);
+            var salaryGroups = new app.Collections.SalaryGroups(null, {settings: {department: row.data("department")}});
+            salaryGroups.fetch();
+            row.find("td").eq(0).append((new app.Views.SalaryGroupsView({collection: salaryGroups})).render().el);
         }
         ,render: function() {
             this.$el.html(this.template({

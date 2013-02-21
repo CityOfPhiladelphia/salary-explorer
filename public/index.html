@@ -39,12 +39,13 @@
 	<div class="loader"><span class="icon"></span></div>
     
     <script type="text/template" id="tmpl-departments">
+        <% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; }; %>
         <ul class="breadcrumb">
             <li><a href="#">HOME</a> <span class="divider">/</span></li>
             <li class="active">DEPARTMENTS</li>
         </ul>
         <% if(data.rows !== undefined && data.rows.length) { %>
-            <% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; }; %>
+            <a href="#visualize" class="btn">Visualize</a>
             <table class="table table-condensed table-striped-skip no-more-tables">
                 <thead>
                     <tr>
@@ -210,6 +211,16 @@
         <% } %>
     </script>
     
+    <script type="text/template" id="tmpl-visualize">
+        <ul class="breadcrumb">
+            <li><a href="#">HOME</a> <span class="divider">/</span></li>
+            <li><a href="#departments">DEPARTMENTS</a> <span class="divider">/</span></li>
+            <li class="active">VISUALIZE</li>
+        </ul>
+        <div id="stacked"></div>
+        <div id="combined"></div>
+    </script>
+    
     <script type="text/template" id="tmpl-home">
     	<div class="hero-unit">
 			<h1>Philly Salaries</h1>
@@ -229,9 +240,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.9/backbone-min.js"></script>
     <!--<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.paginator/0.5/backbone.paginator.min.js"></script>-->
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/graphael/0.5.0/g.raphael-min.js"></script>
-    <script src="lib/javascripts/g.pie.min.js"></script>   
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/2.3.5/highcharts.js"></script>
     <script src="lib/javascripts/backbone.queryparams.js"></script>
     <script src="lib/javascripts/jquery.jsonp.js"></script>
     <script src="src/javascripts/codes.js"></script>
