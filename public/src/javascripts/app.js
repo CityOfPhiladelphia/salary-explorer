@@ -72,7 +72,7 @@ window.util = window.util || {};
          */
         ,buildFragment: function(route, add, preserve) {
             //return _.defaults(add || {}, remove !== undefined && remove.length ? _.omit(this.params, remove) : this.params);
-            var newParams = preserve !== undefined && preserve.length && this.params !== undefined ? _.extend(add, this.params/*_.pick(this.params, preserve)*/) : add;
+            var newParams = preserve !== undefined && preserve.length && this.params !== undefined ? _.extend(add, _.pick(this.params, preserve)) : add;
             return (route || "") + ( ! _.isEmpty(newParams) ? "?" + $.param(newParams) : "");
         }
         /*
@@ -80,7 +80,7 @@ window.util = window.util || {};
          * @param params Object of URL's querystring params
          */
         ,setParams: function(params) {
-            this.params = _.clone(params);
+            this.params = typeof params === "object" ? _.clone(params) : {};
         }
     });
     
