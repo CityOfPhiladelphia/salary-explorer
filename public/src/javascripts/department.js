@@ -74,7 +74,7 @@ window.util = window.util || {};
                 ,sum: this.collection.sum
                 ,count: this.collection.count
                 ,settings: this.collection.settings
-                //,sortProps: util.getSortProps(this.collection.settings, "departments")
+                ,sortProps: util.getSortProps(this.collection.settings, "departments")
                 //,arrows: util.getArrows(this.collection.settings)
             }));
             return this;
