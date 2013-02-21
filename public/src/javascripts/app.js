@@ -98,7 +98,7 @@ window.util = window.util || {};
      */
     $(document).on("click", "[data-replace=\"true\"]", function(e) {
         e.preventDefault();
-        app.router.navigate($(this).attr("href"), {trigger: true, replace: true});
+        app.router.navigate($(e.currentTarget).attr("href"), {trigger: true, replace: true});
     });
     
 })(window, window.jQuery, window._, window.Backbone, window.Salaries, window.FusionTable, window.util);
