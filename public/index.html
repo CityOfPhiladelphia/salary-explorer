@@ -96,6 +96,7 @@
     </script>
     
     <script type="text/template" id="tmpl-employees">
+        <% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; } %>
         <ul class="breadcrumb">
             <li><a href="#">HOME</a> <span class="divider">/</span></li>
             <li><a href="#departments">DEPARTMENTS</a> <span class="divider">/</span></li>
@@ -107,20 +108,47 @@
             <% } %>
         </ul>
     	<div class="row">
-			<div id="title" class="span6"><h3><%= data.title %></h3></div>
-			<div id="search" class="span2 offset4">
+    		<div id="title" class="span4"><h3><%= data.title %></h3></div>
+    		<div class="span4">
+                <div class="btn-group hidden-tablet hidden-desktop">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-th-list"></i> Sort <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        
+                        <% if(data.settings.department === undefined) { %>
+                        <li><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
+                            <%= icon(data.sortProps.department.arrow) %>
+                        </a></li>
+                        <% } %>
+                        <li><a href="#<%= data.sortProps.lastname.href %>" data-replace="true">Last Name
+                            <%= icon(data.sortProps.lastname.arrow) %>
+                        </a></li>
+                        <li><a href="#<%= data.sortProps.firstname.href %>" data-replace="true">First Name
+                            <%= icon(data.sortProps.firstname.arrow) %>
+                        </a></li>
+                        <li><a href="#<%= data.sortProps.middleinitial.href %>" data-replace="true">Middle Initial
+                            <%= icon(data.sortProps.middleinitial.arrow) %>
+                        </a></li>
+                        <li><a href="#<%= data.sortProps.title.href %>" data-replace="true">Title
+                            <%= icon(data.sortProps.title.arrow) %>
+                        </a></li>
+                        <li><a href="#<%= data.sortProps.salary.href %>" data-replace="true">Salary
+                            <%= icon(data.sortProps.salary.arrow) %>
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+			<div id="search" class="span4">
                 <form class="form-search pull-right">
             		<% var search = data.settings.search || null; %>
         			<div class="input-append<% if(search) { %> input-prepend<% } %>">
         				<% if(search) { %><a href="#<%= Salaries.router.buildFragment("employees", {}, ["department"]) %>" class="add-on"><i class="icon-remove"></i></a><% } %>
-        				<input name="search" placeholder="Search<% if(data.title) { %> <%= data.title %><% } %>" type="text" class="span2<% if( ! search) { %> search-query<% } %>"<% if(search) { %> value="<%= search %>"<% } %>>
+        				<input name="search" placeholder="Search<% if(data.title) { %> <%= data.title %><% } %>" type="text" class="<% if( ! search) { %> search-query<% } %>"<% if(search) { %> value="<%= search %>"<% } %>>
         				<button type="submit" class="btn"><i class="icon-search"></i></button>
         			</div>
         		</form>
             </div>
 		</div>
         <% if(data.rows !== undefined && data.rows.length) { %>
-            <% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; } %>
             <table class="table table-condensed table-striped no-more-tables">
                 <thead>
                 <% if(data.settings.department === undefined) { %>

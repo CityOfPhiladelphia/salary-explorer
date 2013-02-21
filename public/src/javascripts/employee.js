@@ -24,7 +24,7 @@ window.util = window.util || {};
             // Convert array of arrays to array of objects with our keys/fields
             var self = this
                 ,newRows = []
-                ,newRow, i, key;;
+                ,newRow, i, key;
             if(response.rows !== undefined && response.rows.length) {
                 // If we received our limit + 1, we know there's another page available, and we remove that +1 from the collection
                 if(response.rows.length > this.settings.limit) {
@@ -39,7 +39,7 @@ window.util = window.util || {};
                     i = 0;
                     for(i in row) {
                         key = self.settings.fields[i];
-                        newRow[key] = (key === "salary" ? parseInt(row[i]) : row[i]);
+                        newRow[key] = (key === "salary" ? parseInt(row[i], 0) : row[i]);
                     }
                     newRows.push(newRow);
                 });
@@ -94,8 +94,8 @@ window.util = window.util || {};
             // Determine title
             if(this.collection.settings.department === undefined) {
                 title = "All Employees";
-            } else if(codes !== undefined && codes.department !== undefined && codes.department[this.collection.settings.department] !== undefined) {
-                title = codes.department[this.collection.settings.department];
+            } else if(window.codes !== undefined && window.codes.department !== undefined && window.codes.department[this.collection.settings.department] !== undefined) {
+                title = window.codes.department[this.collection.settings.department];
             } else {
                 title = "Salaries"; // Intentionally vague
             }

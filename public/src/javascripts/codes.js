@@ -1,4 +1,4 @@
-var codes = codes || {};
+window.codes = window.codes || {};
 (function(codes) {
     
     codes["department"] = {

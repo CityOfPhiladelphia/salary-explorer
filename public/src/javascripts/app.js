@@ -85,10 +85,12 @@ window.util = window.util || {};
     });
     
     /**
-     * Executed Immediately
+     * Initiate application
      */
-    app.router = new app.Routers.AppRouter();
-    Backbone.history.start();
+    $(document).ready(function() {
+        app.router = new app.Routers.AppRouter();
+        Backbone.history.start();
+    });
     
     /*
      * Allow <a> tags with data-replace="true" to navigate without creating an entry in browser history
