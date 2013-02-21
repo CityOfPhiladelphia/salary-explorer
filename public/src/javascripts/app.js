@@ -98,8 +98,8 @@ window.util = window.util || {};
      */
     $(document).on("click", "[data-replace=\"true\"]", function(e) {
         e.preventDefault();
-        console.log($(e.currentTarget).attr("href").replace(/^#/, ""));
-        app.router.navigate($(e.currentTarget).attr("href").replace(/^#/, ""), {trigger: true, replace: true});
+        console.log($(this).attr("href").replace(/^#/, ""));
+        app.router.navigate($(this).attr("href").replace(/^#/, ""), {trigger: true, replace: true});
     });
     
 })(window, window.jQuery, window._, window.Backbone, window.Salaries, window.FusionTable, window.util);
