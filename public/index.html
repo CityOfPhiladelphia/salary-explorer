@@ -81,13 +81,6 @@
                     </tr>
                     <tr class="analysis" data-department="<%= row.departmentid %>">
                         <td colspan="4">
-                            This department houses <%= count %>% of the City's employees and receives <%= salaries %>% of the City's salary dollars.
-                            <div class="progress">
-                                <div class="bar" style="width: <%= count %>%;"><%= count %>%</div>
-                            </div>
-                            <div class="progress">
-                                <div class="bar" style="width: <%= salaries %>%;"><%= salaries %>%</div>
-                            </div>
                         </td>
                     </tr>
                 <% }); %>
@@ -211,6 +204,8 @@
         <% } %>
     </script>
     
+    <script type="text/template" id="tmpl-salarygroups2"><div class="salarygroup"></div></script>
+    
     <script type="text/template" id="tmpl-visualize">
         <ul class="breadcrumb">
             <li><a href="#">HOME</a> <span class="divider">/</span></li>
@@ -219,6 +214,7 @@
         </ul>
         <div id="stacked"></div>
         <div id="combined"></div>
+        <div id="pie"></div>
     </script>
     
     <script type="text/template" id="tmpl-home">
@@ -248,7 +244,7 @@
     <script src="src/javascripts/fusiontable.js"></script>
     <script src="src/javascripts/department.js"></script>
     <script src="src/javascripts/employee.js"></script>
-    <script src="src/javascripts/salarygroup.js"></script>
+    <script src="src/javascripts/salarygroup2.js"></script>
     <script src="src/javascripts/app.js"></script>
 </body>
 </html>

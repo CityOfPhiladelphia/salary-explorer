@@ -26,7 +26,7 @@ window.util = window.util || {};
     app.Views.VisualizeView = Backbone.View.extend({
         initialize: function() {
             this.template = _.template($("#tmpl-visualize").html());
-            this.collection.on("reset", this.buildChart, this);
+            this.collection.on("reset", this.buildCharts, this);
             util.loading(true);
             this.collection.fetch({ // TODO: Need error handler
                 complete: function() {util.loading(false);}
@@ -34,10 +34,15 @@ window.util = window.util || {};
         }
         ,render: function() {
             this.$el.html(this.template(this.collection.toJSON()));
-            ////this.buildChart();
+            ////this.buildCharts();
             return this;
         }
-        ,buildChart: function() {
+        ,buildCharts: function() {
+            this.buildStacked("stacked");
+            this.buildCombined("combined");
+            this.buildPie("pie");
+        }
+        ,buildStacked: function(container) {
             var series = [];
             this.collection.each(function(row) {
                 series.push({
@@ -47,7 +52,7 @@ window.util = window.util || {};
             });
             new Highcharts.Chart({
                 chart: {
-                    renderTo: "stacked"
+                    renderTo: container
                     ,type: "bar"
                     ,zoomType: "y"
                     ,height: "300"
@@ -80,7 +85,8 @@ window.util = window.util || {};
                 ,legend: { enabled: false }
                 ,series: series
             });
-            
+        }
+        ,buildCombined: function(container) {
             var categories = [], employees = [], salaries = [];
             this.collection.each(function(row) {
                 categories.push(row.get("department"));
@@ -90,7 +96,7 @@ window.util = window.util || {};
                 
             new Highcharts.Chart({
                 chart: {
-                    renderTo: "combined"
+                    renderTo: container
                     ,zoomType: "x"
                     ,height: "300"
                 }
@@ -162,6 +168,56 @@ window.util = window.util || {};
                         ,data: salaries
                     }
                 ]
+            });
+        }
+        ,buildPie: function(container) {
+            var data = [];
+            this.collection.each(function(row) {
+                data.push([row.get("department"), row.get("salaries")]);
+            });
+            
+            new Highcharts.Chart({
+                chart: {
+                    renderTo: container
+                },
+                title: {
+                    text: "Salaries by Department"
+                },
+                tooltip: {
+                    formatter: function() {
+                        return this.key + ": <b>$" + util.formatNumber(this.y) + "</b> (" + Math.round(this.percentage*100)/100 + "%)";
+                    }
+                    ,percentageDecimals: 1
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            color: '#000000',
+                            connectorColor: '#000000',
+                            formatter: function() {
+                                return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(2) +' %';
+                            }
+                        }
+                    }
+                    ,series: {
+                        cropThreshold: 10
+                    }
+                },
+                series: [{
+                    type: 'pie'
+                    ,name: 'Salaries'
+                    ,data: data
+                    /*,point: {
+                        events: {
+                            click: function() {
+                                alert("clicked");
+                            }
+                        }
+                    }*/
+                }]
             });
         }
     });
