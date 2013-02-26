@@ -122,8 +122,7 @@ h1, th { color: #1A3C6A; }
 		border: none;
 		border-bottom: 1px solid #eee; 
 		position: relative;
-		/*padding-left: 40%;*/
-        padding-left: 95px;
+		padding-left: 35%;
 		white-space: normal;
 		text-align:left;
         overflow: auto;
@@ -138,7 +137,7 @@ h1, th { color: #1A3C6A; }
 		/* Top/left values mimic padding */
 		top: 6px;
 		left: 6px;
-		width: 35%; 
+		width: 30%;
 		padding-right: 10px; 
 		white-space: nowrap;
 		text-align: left;
