@@ -84,6 +84,7 @@ window.util = window.util || {};
                     ,type: "bar"
                     ,zoomType: "y"
                     ,height: "200"
+                    ,backgroundColor: "rgba(255, 255, 255, 0.1)"
                 }
                 ,title: {
                     text: "Salary Buckets"
@@ -98,6 +99,11 @@ window.util = window.util || {};
                     min: 0
                     ,title: {
                         text: "Percentage of Employees"
+                    }
+                    ,labels: {
+                        formatter: function() {
+                            return Math.abs(this.value - 100) + "%";
+                        }
                     }
                     ,reversed: true
                     //,labels: {enabled: false}

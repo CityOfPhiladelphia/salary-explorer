@@ -20,6 +20,7 @@ window.util = window.util || {};
             this.moreAvailable = false; // Initialize this property
         }
         ,url: function() { return db.buildUrl(db.query(this.settings)) + "&callback=?"; }
+        ,export: function() { return db.buildExportUrl(db.query(_.omit(this.settings, ["limit", "offset"]))); }
         ,parse: function(response) {
             // Convert array of arrays to array of objects with our keys/fields
             var self = this

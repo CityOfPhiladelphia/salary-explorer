@@ -56,6 +56,7 @@ window.util = window.util || {};
                     ,type: "bar"
                     ,zoomType: "y"
                     ,height: "300"
+                    ,backgroundColor: "rgba(255, 255, 255, 0.1)"
                 }
                 ,title: {
                     text: "Salary Dollars vs # of Employees per Department (Percentage of City)"
@@ -99,6 +100,7 @@ window.util = window.util || {};
                     renderTo: container
                     ,zoomType: "x"
                     ,height: "300"
+                    ,backgroundColor: "rgba(255, 255, 255, 0.1)"
                 }
                 ,title: {
                     text: "Salary Dollars vs # of Employees per Department"
@@ -179,6 +181,7 @@ window.util = window.util || {};
             new Highcharts.Chart({
                 chart: {
                     renderTo: container
+                    ,backgroundColor: "rgba(255, 255, 255, 0.1)"
                 },
                 title: {
                     text: "Salaries by Department"
@@ -222,6 +225,28 @@ window.util = window.util || {};
         }
     });
     
+    app.Views.DownloadView = Backbone.View.extend({
+        initialize: function() {
+            this.template = $("#tmpl-download").html();
+            this.url = this.collection.export();
+        }
+        ,render: function() {
+            this.$el.html(this.template);
+            window.location.replace(this.url);
+            return this;
+        }
+    });
+    
+    app.Views.ToolsView = Backbone.View.extend({
+        initialize: function() {
+            this.template = _.template($("#tmpl-tools").html());
+        }
+        ,render: function() {
+            this.$el.html(this.template());
+            return this;
+        }
+    })
+    
     app.Routers.AppRouter = Backbone.Router.extend({
         routes: {
             "": "home"
@@ -232,28 +257,41 @@ window.util = window.util || {};
         ,currentView: null
         ,initialize: function() {
             this.params = {};
+            app.toolsView = new app.Views.ToolsView();
         }
         ,home: function(params) {
-            this.setParams(params);
+            this.saveRoute("", params);
             app.homeView = new app.Views.HomeView();
             this.showView(app.homeView);
         }
         ,departments: function(params) {
-            this.setParams(params);
+            var view;
+            this.saveRoute("departments", params);
             app.departments = new app.Collections.Departments(null, {settings: params});
             //app.departments.fetch(); // TODO: Need an error handler
-            app.departmentsView = new app.Views.DepartmentsView({collection: app.departments});
-            this.showView(app.departmentsView);
+            if(typeof params === "object" && params.view !== undefined && params.view === "visualize") {
+                view = new app.Views.VisualizeView({collection: app.departments});
+            } else if(typeof params === "object" && params.view !== undefined && params.view === "download") {
+                view = new app.Views.DownloadView({collection: app.departments});
+            } else {
+                view = new app.Views.DepartmentsView({collection: app.departments});
+            }
+            this.showView(view);
         }
         ,employees: function(params) {
-            this.setParams(params);
+            this.saveRoute("employees", params);
             app.employees = new app.Collections.Employees(null, {settings: params});
             //app.employees.fetch();
-            app.employeesView = new app.Views.EmployeesView({collection: app.employees});
-            this.showView(app.employeesView);
+            var view;
+            if(typeof params === "object" && params.view !== undefined && params.view === "download") {
+                view = new app.Views.DownloadView({collection: app.employees});
+            } else {
+                view = new app.Views.EmployeesView({collection: app.employees});
+            }
+            this.showView(view);
         }
         ,visualize: function(params) {
-            this.setParams(params);
+            this.saveRoute("visualize", params);
             app.departments = new app.Collections.Departments(null, {settings: params});
             app.visualizeView = new app.Views.VisualizeView({collection: app.departments});
             this.showView(app.visualizeView);
@@ -268,6 +306,7 @@ window.util = window.util || {};
                 this.currentView.$el.detach();
             }
             $("#main").empty().append(view.render().el);
+            $("#tools").empty().append(app.toolsView.render().el);
             this.currentView = view;
         }
         /*
@@ -279,13 +318,14 @@ window.util = window.util || {};
         ,buildFragment: function(route, add, preserve) {
             //return _.defaults(add || {}, remove !== undefined && remove.length ? _.omit(this.params, remove) : this.params);
             var newParams = preserve !== undefined && preserve.length && this.params !== undefined ? _.extend(add, _.pick(this.params, preserve)) : add;
-            return (route || "") + ( ! _.isEmpty(newParams) ? "?" + $.param(newParams) : "");
+            return (route || this.route) + ( ! _.isEmpty(newParams) ? "?" + $.param(newParams) : "");
         }
         /*
-         * Save params on the router object to build URLs with. Clone it so it doesn't get modified by the app
+         * Save route & params on the router object to build URLs with. Clone it so it doesn't get modified by the app
          * @param params Object of URL's querystring params
          */
-        ,setParams: function(params) {
+        ,saveRoute: function(route, params) {
+            this.route = route;
             this.params = typeof params === "object" ? _.clone(params) : {};
         }
     });

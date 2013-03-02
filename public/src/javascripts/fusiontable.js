@@ -4,6 +4,7 @@ window.DEBUG = window.DEBUG || false;
     
     db.settings = {
         apiHost: "https://www.googleapis.com/fusiontables/v1/"
+        ,exportHost: "https://www.google.com/fusiontables/exporttable"
         ,apiKey: "AIzaSyCmJ45zmFdmbe_j7QtgAXLUTNl1gRFzJl4"
         ,tableId: "1rgusPubWssFR9bb4dcJjPD2TAxQfsH5B8NJXv5E"
         ,timeout: 15000
@@ -26,6 +27,10 @@ window.DEBUG = window.DEBUG || false;
     
     db.buildUrl = function(sql) {
         return this.settings.apiHost + "query?typed=true&key=" + this.settings.apiKey + (sql ? "&sql=" + encodeURIComponent(sql) : "");
+    };
+    
+    db.buildExportUrl = function(sql) {
+        return this.settings.exportHost + "?query=" + encodeURIComponent(sql);
     };
     
     db.buildFields = function(select, noAggregates) {

@@ -35,3 +35,5 @@
 {"ts":1361827256571,"patch":[[{"diffs":[[0,"ps\r\n            "],[1,"var"],[0," salaryGroups = "]],"start1":2799,"start2":2799,"length1":32,"length2":35}]],"length":3682,"saved":false}
 {"ts":1361827394586,"patch":[[{"diffs":[[0,"        "],[-1,"var"],[0," salaryG"]],"start1":2807,"start2":2807,"length1":19,"length2":16}]],"length":3679,"saved":false}
 {"ts":1361827932788,"patch":[[{"diffs":[[0,"ps\r\n            "],[1,"var"],[0," salaryGroups = "]],"start1":2799,"start2":2799,"length1":32,"length2":35}]],"length":3682,"saved":false}
+{"contributors":[],"silentsave":false,"ts":1362252944804,"patch":[[{"diffs":[[0,"back=?\"; }\r\n"],[1,"        ,export: function() { return db.buildExportUrl(db.query(this.settings)); }\r\n"],[0,"        ,par"]],"start1":968,"start2":968,"length1":24,"length2":108}]],"length":3766,"saved":false}
+{"ts":1362253313473,"patch":[[{"diffs":[[0,"ortUrl(db.query("],[1,"_.omit("],[0,"this.settings));"]],"start1":1028,"start2":1028,"length1":32,"length2":39},{"diffs":[[0,"settings"],[1,", [\"limit\", \"offset\"])"],[0,")); }\r\n "]],"start1":1056,"start2":1056,"length1":16,"length2":38}]],"length":3795,"saved":false}

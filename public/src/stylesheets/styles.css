@@ -1,3 +1,5 @@
+body { background: #eee; }
+
 /* Add a margin to the content container */
 #main { margin-bottom: 15px; }
 
@@ -11,28 +13,29 @@ th a { width: 100%; height: 100%; display: inline-block; color: inherit; }
 /* Breadcrumbs */
 .breadcrumb { text-transform: uppercase; }
 
-/* All Employees Row */
-.all td { border-bottom: 1px #333 solid; }
-
 /* No results bar */
 .loading .hide-loading { display: none; }
 
-/* Analysis Row */
+/* Analysis Row, just like bootstrap's :nth-child(odd) */
 .analysis, .no-more-tables .analysis { display: none; }
 .table-striped-skip tbody > tr:nth-of-type(4n+1) > td,
 .table-striped-skip tbody > tr:nth-of-type(4n+1) > th {
-  background-color: #f9f9f9;
+  background-color: #fcfcfc;
 }
+
+/* All Employees Row */
+.table-striped-skip tbody  > .all td { background-color: #fff; border-top: 2px #ddd solid; border-bottom: 1px #ddd solid; }
+
+/* Remove table bottom margin for More button */
+.table { margin-bottom: 0; }
 
 /* Title & Search */
 #title h3 { margin: 0; }
 #search form { margin: 5px; }
 
 /* Phila.gov style */
-.navbar-fixed-top .navbar-inner {
-    background-color: #254A78; /* fallback color, place your own */
-
-	/* Gradients for modern browsers, replace as you see fit */
+.navbar .philagov {
+    background-color: #254A78;
 	background-image: -moz-linear-gradient(top, #4069AB, #1A3C6A);
 	background-image: -ms-linear-gradient(top, #4069AB, #1A3C6A);
 	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4069AB), to(#1A3C6A));
@@ -40,26 +43,24 @@ th a { width: 100%; height: 100%; display: inline-block; color: inherit; }
 	background-image: -o-linear-gradient(top, #4069AB, #1A3C6A);
 	background-image: linear-gradient(top, #4069AB, #1A3C6A);
 	background-repeat: repeat-x;
-
-	/* IE8-9 gradient filter */
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4069AB', endColorstr='#1A3C6A', GradientType=0);
-	/*background: #254A78;
-	background: -webkit-gradient(linear, left top, left bottom, from(#4069AB), to(#1A3C6A));
-	background: -moz-linear-gradient(top, #4069AB, #1A3C6A);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4069AB', endColorstr='#1A3C6A');
-	-moz-box-shadow: 0px 2px 4px #888;
-	-webkit-box-shadow: 0px 2px 4px #888;*/
-	box-shadow: 0px 2px 4px #888;
+    box-shadow: 0px 2px 4px #888;
+    border-color: #252525;
 }
-.navbar .brand { padding: 4px 15px 6px; }
-.btn-navbar { background: none !important; }
-.navbar-inverse .nav > li > a { color: #d8d8d8; }
-.navbar-inner .nav li a:hover { background: none repeat scroll 0 0 #1F4272 !important; }
-@media (max-width: 979px) {
-	.navbar-fixed-top .navbar-inner { padding: 0 }
-	.navbar-inverse .nav-collapse .nav > li > a { color: #d8d8d8; }
-}
-h1, th { color: #1A3C6A; }
+.navbar .philagov li a { color: #d8d8d8; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); }
+.navbar .philagov .nav li .brand:hover, .philagov .nav li a:hover { color: #fff; background: none repeat scroll 0 0 #1F4272; }
+.navbar .philagov .brand { padding: 4px 15px 6px; }
+.navbar .philagov .btn-navbar { background: none; }
+.navbar .navbar-tools { min-height: 0; }
+.navbar .navbar-tools li a { padding-top: 5px; padding-bottom: 5px; }
+.navbar .navbar-tools .divider-vertical { height: 30px; border-left: 1px solid #ddd; }
+.navbar .navbar-tools li { -moz-box-shadow: 1px 0 1px 0 #ddd, 3px 0 1px 0 #fff; -webkit-box-shadow: 1px 0 1px 0 #ddd, 3px 0 1px 0 #fff; box-shadow: 1px 0 1px 0 #ddd, 3px 0 1px 0 #fff; }
+@media (max-width: 979px) { .navbar-fixed-top .navbar-inner { padding: 0 } }
+.table { background: #f6f6f6; }
+.breadcrumb { border: 1px #ddd solid; background: #f6f6f6; }
+.table-striped tbody > tr:nth-child(odd) > td,
+.table-striped tbody > tr:nth-child(odd) > th { background-color: #fcfcfc; }
+.hero-unit { background-color: #ddd; }
 
 /* Loading indicator from jQuery Mobile */
 .loading .loader { display: block; }
