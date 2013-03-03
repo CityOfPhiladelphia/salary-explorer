@@ -45,7 +45,7 @@ window.util = window.util || {};
     
     app.Views.DepartmentsView = Backbone.View.extend({
         initialize: function() {
-            _.bindAll(this, "toggleRow");
+            //_.bindAll(this, "toggleRow");
             this.collection = this.options.collection;
             this.template = _.template($("#tmpl-departments").html());
             this.collection.on("reset", this.render, this);
@@ -54,7 +54,7 @@ window.util = window.util || {};
                 complete: function() {util.loading(false);}
             });
         }
-        ,events: {
+        /*,events: {
             "click .toggle": "toggleRow"
         }
         ,toggleRow: function(e) {
@@ -68,7 +68,7 @@ window.util = window.util || {};
             var salaryGroups = new app.Collections.SalaryGroups(null, {settings: {department: row.data("department")}});
             salaryGroups.fetch();
             row.find("td").eq(0).append((new app.Views.SalaryGroupsView({collection: salaryGroups})).render().el);
-        }
+        }*/
         ,render: function() {
             this.$el.html(this.template({
                 rows: this.collection.toJSON()

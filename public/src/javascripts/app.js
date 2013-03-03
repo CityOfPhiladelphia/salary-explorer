@@ -11,7 +11,7 @@ window.util = window.util || {};
      */
     window.DEBUG = false; // Global
     _.templateSettings.variable = "data";
-    $.ajaxSetup({cache: false}); // Cache ajax requests
+    $.ajaxSetup({cache: true}); // Cache ajax requests
     
     app.Views.HomeView = Backbone.View.extend({
         initialize: function() {
@@ -20,208 +20,6 @@ window.util = window.util || {};
         ,render: function() {
             this.$el.html(this.template);
             return this;
-        }
-    });
-    
-    app.Views.VisualizeView = Backbone.View.extend({
-        initialize: function() {
-            this.template = _.template($("#tmpl-visualize").html());
-            this.collection.on("reset", this.buildCharts, this);
-            util.loading(true);
-            this.collection.fetch({ // TODO: Need error handler
-                complete: function() {util.loading(false);}
-            });
-        }
-        ,render: function() {
-            this.$el.html(this.template(this.collection.toJSON()));
-            ////this.buildCharts();
-            return this;
-        }
-        ,buildCharts: function() {
-            this.buildStacked("stacked");
-            this.buildCombined("combined");
-            this.buildPie("pie");
-        }
-        ,buildStacked: function(container) {
-            var series = [];
-            this.collection.each(function(row) {
-                series.push({
-                    name: row.get("department")
-                    ,data: [row.get("count"), row.get("salaries")]
-                });
-            });
-            new Highcharts.Chart({
-                chart: {
-                    renderTo: container
-                    ,type: "bar"
-                    ,zoomType: "y"
-                    ,height: "300"
-                    ,backgroundColor: "rgba(255, 255, 255, 0.1)"
-                }
-                ,title: {
-                    text: "Salary Dollars vs # of Employees per Department (Percentage of City)"
-                }
-                ,subtitle: {
-                    text: document.ontouchstart === undefined ? "Click and drag to zoom in" : "Drag your finger to zoom in"
-                }
-                ,xAxis: {
-                    categories: ["# of Employees", "Salary Dollars"]
-                }
-                ,yAxis: {
-                    min: 0
-                    ,title: {
-                        text: "Percentage of City"
-                    }
-                }
-                ,tooltip: {
-                    formatter: function() {
-                        return this.series.name + ": " + (this.key === "Salary Dollars" ? "$" : "") + util.formatNumber(this.y) +' ('+ Math.round(this.percentage*100)/100 +'%)';
-                    }
-                }
-                ,plotOptions: {
-                    series: {
-                        stacking: "percent"
-                    }
-                }
-                ,legend: { enabled: false }
-                ,series: series
-            });
-        }
-        ,buildCombined: function(container) {
-            var categories = [], employees = [], salaries = [];
-            this.collection.each(function(row) {
-                categories.push(row.get("department"));
-                employees.push(row.get("count"));
-                salaries.push(row.get("salaries"));
-            });
-                
-            new Highcharts.Chart({
-                chart: {
-                    renderTo: container
-                    ,zoomType: "x"
-                    ,height: "300"
-                    ,backgroundColor: "rgba(255, 255, 255, 0.1)"
-                }
-                ,title: {
-                    text: "Salary Dollars vs # of Employees per Department"
-                }
-                ,subtitle: {
-                    text: document.ontouchstart === undefined ? "Click and drag to zoom in" : "Drag your finger to zoom in"
-                }
-                ,xAxis: [{
-                    categories: categories
-                    ,labels: {enabled: false}
-                }]
-                ,yAxis: [
-                    { // Primary yAxis
-                        title: {
-                            text: "# of Employees"
-                            ,style: {color: "#4572A7"}
-                        }
-                        ,labels: {
-                            formatter: function() {
-                                return util.formatNumber(this.value);
-                            }
-                            ,style: {color: "#4572A7"}
-                        }
-                    }
-                    ,{ // Secondary yAxis
-                        title: {
-                            text: "Salary Dollars",
-                            style: {color: "#89A54E"}
-                        }
-                        ,labels: {
-                            formatter: function() {
-                                return "$" + util.formatNumber(this.value);
-                            }
-                            ,style: {color: "#89A54E"}
-                        }
-                        ,opposite: true
-                        ,min: 0
-                    }
-                ]
-                ,tooltip: {
-                    formatter: function() {
-                        return this.x + ": " + (this.series.name === "Salary Dollars" ? "$" : "") + util.formatNumber(this.y);
-                    }
-                }
-                ,legend: {
-                    enabled: false
-                    /*layout: 'vertical',
-                    align: 'left',
-                    x: 120,
-                    verticalAlign: 'top',
-                    y: 100,
-                    floating: true,
-                    backgroundColor: '#FFFFFF'*/
-                }
-                ,series: [
-                    {
-                        name: '# of Employees'
-                        ,color: '#4572A7'
-                        ,type: 'column'
-                        ,data: employees
-                    }
-                    ,{
-                        name: 'Salary Dollars'
-                        ,color: '#89A54E'
-                        ,type: 'spline'
-                        ,yAxis: 1
-                        ,data: salaries
-                    }
-                ]
-            });
-        }
-        ,buildPie: function(container) {
-            var data = [];
-            this.collection.each(function(row) {
-                data.push([row.get("department"), row.get("salaries")]);
-            });
-            
-            new Highcharts.Chart({
-                chart: {
-                    renderTo: container
-                    ,backgroundColor: "rgba(255, 255, 255, 0.1)"
-                },
-                title: {
-                    text: "Salaries by Department"
-                },
-                tooltip: {
-                    formatter: function() {
-                        return this.key + ": <b>$" + util.formatNumber(this.y) + "</b> (" + Math.round(this.percentage*100)/100 + "%)";
-                    }
-                    ,percentageDecimals: 1
-                },
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: true,
-                            color: '#000000',
-                            connectorColor: '#000000',
-                            formatter: function() {
-                                return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(2) +' %';
-                            }
-                        }
-                    }
-                    ,series: {
-                        cropThreshold: 10
-                    }
-                },
-                series: [{
-                    type: 'pie'
-                    ,name: 'Salaries'
-                    ,data: data
-                    /*,point: {
-                        events: {
-                            click: function() {
-                                alert("clicked");
-                            }
-                        }
-                    }*/
-                }]
-            });
         }
     });
     
@@ -245,7 +43,7 @@ window.util = window.util || {};
             this.$el.html(this.template());
             return this;
         }
-    })
+    });
     
     app.Routers.AppRouter = Backbone.Router.extend({
         routes: {
@@ -269,31 +67,44 @@ window.util = window.util || {};
             this.saveRoute("departments", params);
             app.departments = new app.Collections.Departments(null, {settings: params});
             //app.departments.fetch(); // TODO: Need an error handler
-            if(typeof params === "object" && params.view !== undefined && params.view === "visualize") {
-                view = new app.Views.VisualizeView({collection: app.departments});
-            } else if(typeof params === "object" && params.view !== undefined && params.view === "download") {
-                view = new app.Views.DownloadView({collection: app.departments});
-            } else {
-                view = new app.Views.DepartmentsView({collection: app.departments});
-            }
-            this.showView(view);
+            app.departmentsView = new app.Views.DepartmentsView({collection: app.departments});
+            this.showView(app.departmentsView);
         }
         ,employees: function(params) {
             this.saveRoute("employees", params);
             app.employees = new app.Collections.Employees(null, {settings: params});
             //app.employees.fetch();
-            var view;
-            if(typeof params === "object" && params.view !== undefined && params.view === "download") {
-                view = new app.Views.DownloadView({collection: app.employees});
-            } else {
-                view = new app.Views.EmployeesView({collection: app.employees});
-            }
-            this.showView(view);
+            app.employeesView = new app.Views.EmployeesView({collection: app.employees});
+            this.showView(app.employeesView);
         }
-        ,visualize: function(params) {
+        ,visualize: function(params) { // TODO: Should reuse app.departments, but can't render highcharts without the delay caused by the fetch (needs to be in DOM)
+            var chart;
             this.saveRoute("visualize", params);
-            app.departments = new app.Collections.Departments(null, {settings: params});
-            app.visualizeView = new app.Views.VisualizeView({collection: app.departments});
+            
+            if(typeof params === "object" && params.chart !== undefined && params.chart === "salaryGroups") {
+                
+                app.departments = /*app.departments ||*/ new app.Collections.Departments(null, {settings: params});
+                app.visualizeView = new app.Views.VisualizeView({collection: app.departments});
+                
+            } else if(typeof params === "object" && params.chart !== undefined && params.chart === "sizeVsDollarsLine") {
+                
+                app.departments = /*app.departments ||*/ new app.Collections.Departments(null, {settings: params});
+                chart = new app.Views.Charts.SizeVsDollarsLine({collection: app.departments});
+                app.visualizeView = new app.Views.VisualizeView({chart: chart});
+                
+            } else if(typeof params === "object" && params.chart !== undefined && params.chart === "dollarsPie") {
+                
+                app.departments = /*app.departments ||*/ new app.Collections.Departments(null, {settings: params});
+                chart = new app.Views.Charts.DollarsPie({collection: app.departments});
+                app.visualizeView = new app.Views.VisualizeView({chart: chart});
+                
+            } else {
+                
+                app.departments = /*app.departments ||*/ new app.Collections.Departments(null, {settings: params});
+                chart = new app.Views.Charts.SizeVsDollarsBar({collection: app.departments});
+                app.visualizeView = new app.Views.VisualizeView({chart: chart});
+                
+            }
             this.showView(app.visualizeView);
         }
         /*

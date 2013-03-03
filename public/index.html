@@ -4,6 +4,7 @@
     <title>Salaries</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="img/favicon.ico">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css">
     <style>body { padding-top: 90px; }</style>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.css">
@@ -40,13 +41,13 @@
 	<div class="loader"><span class="icon"></span></div>
     
     <script type="text/template" id="tmpl-tools">
-        <% var checkActive = function(view, defaultSelection) { return (Salaries.router.params.view !== undefined && Salaries.router.params.view === view) || (Salaries.router.params.view === undefined && defaultSelection) ? " class=\"active\"" : ""; } %>
+        <% var checkActive = function(view, defaultSelection) { return (Salaries.router.route !== undefined && Salaries.router.route === view) ? " class=\"active\"" : ""; } %>
         <div class="navbar-inner navbar-tools">
             <div class="container">
                 <ul class="nav pull-left no-collapse">
-                    <li<%= checkActive("table", true) %>><a href="#<%= Salaries.router.buildFragment(null, {view: "table"}, ["department", "search"]) %>"><i class="icon-list"></i> <span class="hidden-phone">Tables</span></a></li>
-                    <li<%= checkActive("visualize") %>><a href="#<%= Salaries.router.buildFragment(null, {view: "visualize"}, ["department", "search"]) %>"><i class="icon-signal"></i> <span class="hidden-phone">Visualize</span></a></li>
-                    <li<%= checkActive("download") %>><a href="#<%= Salaries.router.buildFragment(null, {view: "download"}, ["department", "search"]) %>"><i class="icon-download-alt"></i> <span class="hidden-phone">Download</span></a></li>
+                    <li<%= Salaries.router.route === "departments" || Salaries.router.route === "employees" ? " class=\"active\"" : "" %>><a href="#departments"><i class="icon-list"></i> <span class="hidden-phone">Browse</span></a></li>
+                    <li<%= Salaries.router.route === "visualize" ? " class=\"active\"" : "" %>><a href="#visualize"><i class="icon-signal"></i> <span class="hidden-phone">Visualize</span></a></li>
+                    <li><a href="https://www.google.com/fusiontables/exporttable?query=select+*+from+1rgusPubWssFR9bb4dcJjPD2TAxQfsH5B8NJXv5E"><i class="icon-download-alt"></i> <span class="hidden-phone">Download</span></a></li>
                 </ul>
             </div>
         </div>
@@ -62,7 +63,7 @@
             <table class="table table-condensed table-striped-skip table-bordered no-more-tables">
                 <thead>
                     <tr>
-                        <th colspan="2"><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
+                        <th><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
                             <%= icon(data.sortProps.department.arrow) %>
                         </a></th>
                         <th><a href="#<%= data.sortProps.count.href %>" data-replace="true">Employees
@@ -75,7 +76,6 @@
                 </thead>
                 <tbody>
                     <tr class="all">
-                        <td data-title="Analysis"><button class="btn btn-mini toggle"><i class="icon-plus"></i></button></td>
                         <td data-title="Department"><a href="#employees">ALL EMPLOYEES</a></td>
                         <td data-title="Employees"><%= data.count %></td>
                         <td data-title="Salaries"><%= util.currency("$", data.sum) %></td>
@@ -87,7 +87,6 @@
                     <% var count = Math.round(row.count/data.count*100*100)/100; %>
                     <% var salaries = Math.round(row.salaries/data.sum*100*100)/100; %>
                     <tr>
-                        <td data-title="Analysis"><button class="btn btn-mini toggle"><i class="icon-plus"></i></button></td>
                         <td data-title="Department"><a href="#employees?department=<%= row.departmentid %>"><%= row.department %></a></td>
                         <td data-title="Employees"><%= row.count %></td>
                         <td data-title="Salaries"><%= util.currency("$", row.salaries) %></td>
@@ -217,17 +216,30 @@
         <% } %>
     </script>
     
-    <script type="text/template" id="tmpl-salarygroups2"><div class="salarygroup"></div></script>
-    
     <script type="text/template" id="tmpl-visualize">
-        <ul class="breadcrumb">
-            <li><a href="#">HOME</a> <span class="divider">/</span></li>
-            <li><a href="#departments">DEPARTMENTS</a> <span class="divider">/</span></li>
-            <li class="active">VISUALIZE</li>
+        <% var checkActive = function(chart, isDefault) { return (Salaries.router.params.chart !== undefined && Salaries.router.params.chart === chart || Salaries.router.params.chart === undefined && isDefault) ? " class=\"active\"" : ""; } %>
+        <ul class="nav nav-tabs">
+            <li<%= checkActive("sizeVsDollarsBar", true) %>><a href="#visualize?chart=sizeVsDollarsBar">Size vs Dollars (Bar)</a></li>
+            <li<%= checkActive("sizeVsDollarsLine") %>><a href="#visualize?chart=sizeVsDollarsLine">Size vs Dollars (Line)</a></li>
+            <li<%= checkActive("dollarsPie") %>><a href="#visualize?chart=dollarsPie">Dollars (Pie)</a></li>
+            <li<%= checkActive("salaryGroups") %>><a href="#visualize?chart=salaryGroups">Salary Groups</a></li>
         </ul>
-        <div id="stacked"></div>
-        <div id="combined"></div>
-        <div id="pie"></div>
+        <% if(data.departments !== undefined) { %>
+            <div class="row">
+                <div class="span3">
+                    <div class="well">
+                        <ul class="nav nav-list">
+                        <% _.each(data.departments, function(row) { %>
+                            <li><a href="" class="department" data-value="<%= row.departmentid %>"><%= row.department %></a></li>
+                        <% }) %>
+                        </ul>
+                    </div>
+                </div>
+                <div class="span9 chart"><div class="alert alert-info">Select departments to visualize</div></div>
+            </div>
+        <% } else { %>
+            <div class="chart"></div>
+        <% } %>
     </script>
     
     <script type="text/template" id="tmpl-download">
@@ -242,7 +254,8 @@
 			<h1>Philly Salaries</h1>
 			<p>You can use this application to browse salary data for Fiscal Year 2012.</p>
 			<p>
-				<a href="#departments" class="btn btn-large btn-success">View Salaries</a>
+    			<a href="#departments" class="btn btn-large btn-primary">Browse</a>
+    			<a href="#visualize" class="btn btn-large btn-success">Visualize</a>
 			</p>
 			<!--<p>
 				<a href="https://www.google.com/fusiontables/DataSource?docid=" target="_blank" class="btn btn-small"><i class="icon-download"></i> Export Data</a>
@@ -264,7 +277,7 @@
     <script src="src/javascripts/fusiontable.js"></script>
     <script src="src/javascripts/department.js"></script>
     <script src="src/javascripts/employee.js"></script>
-    <script src="src/javascripts/salarygroup2.js"></script>
+    <script src="src/javascripts/visualize.js"></script>
     <script src="src/javascripts/app.js"></script>
 </body>
 </html>
