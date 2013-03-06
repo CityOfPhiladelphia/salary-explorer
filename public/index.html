@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <link rel="shortcut icon" href="img/favicon.ico">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css">
     <style>body { padding-top: 90px; }</style>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.css">
@@ -12,6 +14,7 @@
 </head>
 <body>
 
+    <!-- Nav bar -->
     <div class="navbar navbar-fixed-top">
 		<div class="navbar-inner philagov">
 			<div class="container">
@@ -36,248 +39,29 @@
         <div id="tools"></div>
     </div>
 	
+    <!-- Content Container -->
 	<div class="container" id="main"></div>
 	
+    <!-- Loading Spinner -->
 	<div class="loader"><span class="icon"></span></div>
-    
-    <script type="text/template" id="tmpl-tools">
-        <% var checkActive = function(view, defaultSelection) { return (Salaries.router.route !== undefined && Salaries.router.route === view) ? " class=\"active\"" : ""; } %>
-        <div class="navbar-inner navbar-tools">
-            <div class="container">
-                <ul class="nav pull-left no-collapse">
-                    <li<%= Salaries.router.route === "departments" || Salaries.router.route === "employees" ? " class=\"active\"" : "" %>><a href="#departments"><i class="icon-list"></i> <span class="hidden-phone">Browse</span></a></li>
-                    <li<%= Salaries.router.route === "visualize" ? " class=\"active\"" : "" %>><a href="#visualize"><i class="icon-signal"></i> <span class="hidden-phone">Visualize</span></a></li>
-                    <li><a href="https://www.google.com/fusiontables/exporttable?query=select+*+from+1rgusPubWssFR9bb4dcJjPD2TAxQfsH5B8NJXv5E"><i class="icon-download-alt"></i> <span class="hidden-phone">Download</span></a></li>
-                </ul>
-            </div>
-        </div>
-    </script>
-    
-    <script type="text/template" id="tmpl-departments">
-        <% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; }; %>
-        <ul class="breadcrumb">
-            <li><a href="#">HOME</a> <span class="divider">/</span></li>
-            <li class="active">DEPARTMENTS</li>
-        </ul>
-        <% if(data.rows !== undefined && data.rows.length) { %>
-            <table class="table table-condensed table-striped-skip table-bordered no-more-tables">
-                <thead>
-                    <tr>
-                        <th><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
-                            <%= icon(data.sortProps.department.arrow) %>
-                        </a></th>
-                        <th><a href="#<%= data.sortProps.count.href %>" data-replace="true">Employees
-                            <%= icon(data.sortProps.count.arrow) %>
-                        </a></th>
-                        <th><a href="#<%= data.sortProps.salaries.href %>" data-replace="true">Salaries
-                            <%= icon(data.sortProps.salaries.arrow) %>
-                        </a></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="all">
-                        <td data-title="Department"><a href="#employees">ALL EMPLOYEES</a></td>
-                        <td data-title="Employees"><%= data.count %></td>
-                        <td data-title="Salaries"><%= util.currency("$", data.sum) %></td>
-                    </tr>
-                    <tr class="analysis">
-                        <td colspan="4"></td>
-                    </tr>
-                <% _.each(data.rows, function(row) { %>
-                    <% var count = Math.round(row.count/data.count*100*100)/100; %>
-                    <% var salaries = Math.round(row.salaries/data.sum*100*100)/100; %>
-                    <tr>
-                        <td data-title="Department"><a href="#employees?department=<%= row.departmentid %>"><%= row.department %></a></td>
-                        <td data-title="Employees"><%= row.count %></td>
-                        <td data-title="Salaries"><%= util.currency("$", row.salaries) %></td>
-                    </tr>
-                    <tr class="analysis" data-department="<%= row.departmentid %>">
-                        <td colspan="4">
-                        </td>
-                    </tr>
-                <% }); %>
-                </tbody>
-            </table>
-        <% } %>
-    </script>
-    
-    <script type="text/template" id="tmpl-employees">
-        <% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; } %>
-        <ul class="breadcrumb">
-            <li><a href="#">HOME</a> <span class="divider">/</span></li>
-            <li><a href="#departments">DEPARTMENTS</a> <span class="divider">/</span></li>
-            <% if(data.settings.search !== undefined) { %>
-                <li><a href="#<%= Salaries.router.buildFragment("employees", {}, ["department"]) %>"><%= data.title %></a> <span class="divider">/</span></li>
-                <li class="active">Search Results</li>
-            <% } else { %>
-                <li class="active"><%= data.title %></li>
-            <% } %>
-        </ul>
-    	<div class="row">
-    		<div id="title" class="span4"><h3><%= data.title %></h3></div>
-    		<div class="span4">
-                <div class="btn-group hidden-tablet hidden-desktop">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-th-list"></i> Sort <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        
-                        <% if(data.settings.department === undefined) { %>
-                        <li><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
-                            <%= icon(data.sortProps.department.arrow) %>
-                        </a></li>
-                        <% } %>
-                        <li><a href="#<%= data.sortProps.lastname.href %>" data-replace="true">Last Name
-                            <%= icon(data.sortProps.lastname.arrow) %>
-                        </a></li>
-                        <li><a href="#<%= data.sortProps.firstname.href %>" data-replace="true">First Name
-                            <%= icon(data.sortProps.firstname.arrow) %>
-                        </a></li>
-                        <li><a href="#<%= data.sortProps.middleinitial.href %>" data-replace="true">Middle Initial
-                            <%= icon(data.sortProps.middleinitial.arrow) %>
-                        </a></li>
-                        <li><a href="#<%= data.sortProps.title.href %>" data-replace="true">Title
-                            <%= icon(data.sortProps.title.arrow) %>
-                        </a></li>
-                        <li><a href="#<%= data.sortProps.salary.href %>" data-replace="true">Salary
-                            <%= icon(data.sortProps.salary.arrow) %>
-                        </a></li>
-                    </ul>
-                </div>
-            </div>
-			<div id="search" class="span4">
-                <form class="form-search pull-right">
-            		<% var search = data.settings.search || null; %>
-        			<div class="input-append<% if(search) { %> input-prepend<% } %>">
-        				<% if(search) { %><a href="#<%= Salaries.router.buildFragment("employees", {}, ["department"]) %>" class="add-on"><i class="icon-remove"></i></a><% } %>
-        				<input name="search" placeholder="Search<% if(data.title) { %> <%= data.title %><% } %>" type="text" class="<% if( ! search) { %> search-query<% } %>"<% if(search) { %> value="<%= search %>"<% } %>>
-        				<button type="submit" class="btn"><i class="icon-search"></i></button>
-        			</div>
-        		</form>
-            </div>
-		</div>
-        <% if(data.rows !== undefined && data.rows.length) { %>
-            <table class="table table-condensed table-striped table-bordered no-more-tables">
-                <thead>
-                <% if(data.settings.department === undefined) { %>
-                    <th><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
-                        <%= icon(data.sortProps.department.arrow) %>
-                    </a></th>
-                <% } %>
-                    <th><a href="#<%= data.sortProps.lastname.href %>" data-replace="true">Last Name
-                        <%= icon(data.sortProps.lastname.arrow) %>
-                    </a></th>
-                    <th><a href="#<%= data.sortProps.firstname.href %>" data-replace="true">First Name
-                        <%= icon(data.sortProps.firstname.arrow) %>
-                    </a></th>
-                    <th><a href="#<%= data.sortProps.middleinitial.href %>" data-replace="true">Middle Initial
-                        <%= icon(data.sortProps.middleinitial.arrow) %>
-                    </a></th>
-                    <th><a href="#<%= data.sortProps.title.href %>" data-replace="true">Title
-                        <%= icon(data.sortProps.title.arrow) %>
-                    </a></th>
-                    <th><a href="#<%= data.sortProps.salary.href %>" data-replace="true">Salary
-                        <%= icon(data.sortProps.salary.arrow) %>
-                    </a></th>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <button class="btn btn-large btn-block more" data-loading-text="Loading..." data-error-text="Error">More</button>
-        <% } else if(data.error) { %>
-            <div class="alert alert-error"><%= data.error %></div>
-        <% } else { %>
-            <div class="alert hide-loading">No results found</div>
-        <% } %>
-        <% if(data.settings.search !== undefined && data.settings.department !== undefined) { %>
-            <div class="alert alert-info hide-loading">You just searched through <%= data.title %>. Did you mean to search through <a href="#<%= Salaries.router.buildFragment("employees", {}, ["search"]) %>">All Employees</a>?</div>
-        <% } %>
-    </script>
-    
-    <script type="text/template" id="tmpl-employee">
-        <% if(data.settings.department === undefined) { %>
-        <td data-title="Dept"><%= data.row.department %></td>
-        <% } %>
-        <td data-title="Last"><%= data.row.lastname || "&nbsp;" %></td>
-        <td data-title="First"><%= data.row.firstname || "&nbsp;" %></td>
-        <td data-title="Middle"><%= data.row.middleinitial || "&nbsp;" %></td>
-        <td data-title="Title"><%= data.row.title || "N/A" %></td>
-        <td data-title="Salary"><%= util.currency("$", data.row.salary) %></td>
-    </script>
-    
-    <script type="text/template" id="tmpl-salarygroups">
-        <% var classes = ["bar-info", "bar-warning", "bar-success", "bar-danger"]; %>
-        <% if(data.rows !== undefined && data.rows.length) { %>
-            <div class="progress buckets">
-            <% _.each(data.buckets, function(bucket, index) { %>
-                <div class="bar <%= classes[index % classes.length] %>" style="width: <%= bucket.percentage %>%;" rel="tooltip" title="<%= bucket.count %> Employees (<%= Math.round(bucket.percentage) %>%)">
-                    $<%= bucket.min %>-<%= bucket.max %>k
-                </div>
-            <% }); %>
-            </div>
-        <% } %>
-    </script>
-    
-    <script type="text/template" id="tmpl-visualize">
-        <% var checkActive = function(chart, isDefault) { return (Salaries.router.params.chart !== undefined && Salaries.router.params.chart === chart || Salaries.router.params.chart === undefined && isDefault) ? " class=\"active\"" : ""; } %>
-        <ul class="nav nav-tabs">
-            <li<%= checkActive("sizeVsDollarsBar", true) %>><a href="#visualize?chart=sizeVsDollarsBar">Size vs Dollars (Bar)</a></li>
-            <li<%= checkActive("sizeVsDollarsLine") %>><a href="#visualize?chart=sizeVsDollarsLine">Size vs Dollars (Line)</a></li>
-            <li<%= checkActive("dollarsPie") %>><a href="#visualize?chart=dollarsPie">Dollars (Pie)</a></li>
-            <li<%= checkActive("salaryGroups") %>><a href="#visualize?chart=salaryGroups">Salary Groups</a></li>
-        </ul>
-        <% if(data.departments !== undefined) { %>
-            <div class="row">
-                <div class="span3">
-                    <div class="well">
-                        <ul class="nav nav-list">
-                        <% _.each(data.departments, function(row) { %>
-                            <li><a href="" class="department" data-value="<%= row.departmentid %>"><%= row.department %></a></li>
-                        <% }) %>
-                        </ul>
-                    </div>
-                </div>
-                <div class="span9 chart"><div class="alert alert-info">Select departments to visualize</div></div>
-            </div>
-        <% } else { %>
-            <div class="chart"></div>
-        <% } %>
-    </script>
-    
-    <script type="text/template" id="tmpl-download">
-        <div class="hero-unit">
-            <h1>Downloading</h1>
-            <p>Your download should start momentarily.</p>
-        </div>
-    </script>
-    
-    <script type="text/template" id="tmpl-home">
-    	<div class="hero-unit">
-			<h1>Philly Salaries</h1>
-			<p>You can use this application to browse salary data for Fiscal Year 2012.</p>
-			<p>
-    			<a href="#departments" class="btn btn-large btn-primary">Browse</a>
-    			<a href="#visualize" class="btn btn-large btn-success">Visualize</a>
-			</p>
-			<!--<p>
-				<a href="https://www.google.com/fusiontables/DataSource?docid=" target="_blank" class="btn btn-small"><i class="icon-download"></i> Export Data</a>
-				<a href="http://github.com" target="_blank" class="btn btn-small"><i class="icon-align-left"></i> Source Code</a>
-			</p>-->
-		</div>
-    </script>
 
+    <!-- Libraries -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.9/backbone-min.js"></script>
-    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.paginator/0.5/backbone.paginator.min.js"></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.layoutmanager/0.8.2/backbone.layoutmanager.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/2.3.5/highcharts.js"></script>
     <script src="lib/javascripts/backbone.queryparams.js"></script>
     <script src="lib/javascripts/jquery.jsonp.js"></script>
+    
+    <!-- Application -->
     <script src="src/javascripts/codes.js"></script>
     <script src="src/javascripts/util.js"></script>
     <script src="src/javascripts/fusiontable.js"></script>
-    <script src="src/javascripts/department.js"></script>
-    <script src="src/javascripts/employee.js"></script>
-    <script src="src/javascripts/visualize.js"></script>
+    <script src="src/javascripts/collections.js"></script>
+    <script src="src/javascripts/charts.js"></script>
+    <script src="src/javascripts/views.js"></script>
     <script src="src/javascripts/app.js"></script>
 </body>
 </html>

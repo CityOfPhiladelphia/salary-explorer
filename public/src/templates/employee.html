@@ -1,0 +1,8 @@
+<% if(data.settings.department === undefined) { %>
+<td data-title="Dept"><%= data.row.department %></td>
+<% } %>
+<td data-title="Last"><%= data.row.lastname || "&nbsp;" %></td>
+<td data-title="First"><%= data.row.firstname || "&nbsp;" %></td>
+<td data-title="Middle"><%= data.row.middleinitial || "&nbsp;" %></td>
+<td data-title="Title"><%= data.row.title || "N/A" %></td>
+<td data-title="Salary"><%= util.currency("$", data.row.salary) %></td>

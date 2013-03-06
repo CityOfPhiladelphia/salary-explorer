@@ -1,0 +1,39 @@
+<% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; } %>
+<% if(data.rows !== undefined && data.rows.length) { %>
+    <table class="table table-condensed table-striped table-bordered no-more-tables">
+        <thead>
+        <% if(data.settings.department === undefined) { %>
+            <th><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
+                <%= icon(data.sortProps.department.arrow) %>
+            </a></th>
+        <% } %>
+            <th><a href="#<%= data.sortProps.lastname.href %>" data-replace="true">Last Name
+                <%= icon(data.sortProps.lastname.arrow) %>
+            </a></th>
+            <th><a href="#<%= data.sortProps.firstname.href %>" data-replace="true">First Name
+                <%= icon(data.sortProps.firstname.arrow) %>
+            </a></th>
+            <th><a href="#<%= data.sortProps.middleinitial.href %>" data-replace="true">Middle Initial
+                <%= icon(data.sortProps.middleinitial.arrow) %>
+            </a></th>
+            <th><a href="#<%= data.sortProps.title.href %>" data-replace="true">Title
+                <%= icon(data.sortProps.title.arrow) %>
+            </a></th>
+            <th><a href="#<%= data.sortProps.salary.href %>" data-replace="true">Salary
+                <%= icon(data.sortProps.salary.arrow) %>
+            </a></th>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <% if(data.moreAvailable) { %>
+        <button class="btn btn-large btn-block more" data-loading-text="Loading..." data-error-text="Error">More</button>
+    <% } %>
+<% } else if(data.error) { %>
+    <div class="alert alert-error"><%= data.error %></div>
+<% } else { %>
+    <div class="alert hide-loading">No results found</div>
+<% } %>
+<% if(data.settings.search !== undefined && data.settings.department !== undefined) { %>
+    <div class="alert alert-info hide-loading">You just searched through <%= data.title %>. Did you mean to search through <a href="#<%= Salaries.router.buildFragment("employees", {}, ["search"]) %>">All Employees</a>?</div>
+<% } %>

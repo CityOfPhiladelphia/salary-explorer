@@ -1,0 +1,14 @@
+<ul class="breadcrumb">
+    <li><a href="#">HOME</a> <span class="divider">/</span></li>
+    <% if(data.settings.department !== undefined || data.title !== undefined) { %>
+        <li><a href="#browse">DEPARTMENTS</a> <span class="divider">/</span></li>
+    <% } else { %>
+        <li class="active">DEPARTMENTS</li>
+    <% } %>
+    <% if(data.settings.search !== undefined) { %>
+        <li><a href="#<%= Salaries.router.buildFragment() %>"><%= data.title %></a> <span class="divider">/</span></li>
+        <li class="active">Search Results</li>
+    <% } else { %>
+        <li class="active"><%= data.title %></li>
+    <% } %>
+</ul>

@@ -1,7 +1,7 @@
 window.jQuery = window.jQuery || {};
 window._ = window._ || {};
 window.Backbone = window.Backbone || {};
-window.Salaries = window.Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}};
+window.Salaries = window.Salaries || {Models: {}, Views: {}, Layouts: {}, Collections: {}, Routers: {}};
 window.FusionTable = window.FusionTable || {};
 window.util = window.util || {};
 (function(window, $, _, Backbone, app, db, util) {
@@ -12,38 +12,26 @@ window.util = window.util || {};
     window.DEBUG = false; // Global
     _.templateSettings.variable = "data";
     $.ajaxSetup({cache: true}); // Cache ajax requests
-    
-    app.Views.HomeView = Backbone.View.extend({
-        initialize: function() {
-            this.template = $("#tmpl-home").html();
-        }
-        ,render: function() {
-            this.$el.html(this.template);
-            return this;
-        }
-    });
-    
-    app.Views.DownloadView = Backbone.View.extend({
-        initialize: function() {
-            this.template = $("#tmpl-download").html();
-            this.url = this.collection.export();
-        }
-        ,render: function() {
-            this.$el.html(this.template);
-            window.location.replace(this.url);
-            return this;
+    // https://github.com/tbranyen/backbone.layoutmanager/wiki/Template-rendering
+    Backbone.Layout.configure({
+        prefix: "src/templates/",
+        fetch: function(path) {
+            var JST = window.JST || {};
+            
+            if (JST[path]) {
+                return JST[path];
+            }
+            var done = this.async();
+            
+            $.get(path, function(contents) {
+                done(_.template(contents));
+            }, "text");
         }
     });
     
-    app.Views.ToolsView = Backbone.View.extend({
-        initialize: function() {
-            this.template = _.template($("#tmpl-tools").html());
-        }
-        ,render: function() {
-            this.$el.html(this.template());
-            return this;
-        }
-    });
+    app.Views.HomeView = Backbone.Layout.extend({template: "home.html"});
+    
+    app.Views.ToolsView = Backbone.Layout.extend({template: "tools.html"});
     
     app.Routers.AppRouter = Backbone.Router.extend({
         routes: {
@@ -51,6 +39,9 @@ window.util = window.util || {};
             ,"departments": "departments"
             ,"employees": "employees"
             ,"visualize": "visualize"
+            ,"browse": "browseDepartments"
+            ,"browse/:department": "browseEmployees"
+            ,"*path": "home"
         }
         ,currentView: null
         ,initialize: function() {
@@ -59,53 +50,107 @@ window.util = window.util || {};
         }
         ,home: function(params) {
             this.saveRoute("", params);
-            app.homeView = new app.Views.HomeView();
+            app.homeView = new app.Views.HomeView({title: "Salaries"});
             this.showView(app.homeView);
         }
-        ,departments: function(params) {
-            var view;
-            this.saveRoute("departments", params);
+        ,browseDepartments: function(params) {
+            this.saveRoute("browse", params);
+            
+            // Fetch departments
             app.departments = new app.Collections.Departments(null, {settings: params});
-            //app.departments.fetch(); // TODO: Need an error handler
-            app.departmentsView = new app.Views.DepartmentsView({collection: app.departments});
-            this.showView(app.departmentsView);
+            util.loading(true);
+            app.departments.fetch({ // TODO: Need error handler
+                complete: function() {util.loading(false);}
+            });
+            
+            // Instantiate layout
+            var layout = new Backbone.Layout({
+                template: "browse.html"
+                ,title: "Departments"
+                ,views: {
+                    ".breadcrumbs": new app.Views.Breadcrumbs({collection: app.departments})
+                    ,".sort": new app.Views.SortDepartments({collection: app.departments})
+                    ,".results": new app.Views.Departments({collection: app.departments})
+                }
+            });
+            
+            // Show layout
+            this.showView(layout);
         }
-        ,employees: function(params) {
-            this.saveRoute("employees", params);
+        ,browseEmployees: function(department, params) {
+            this.saveRoute("browse/" + department, params);
+            params = params || {};
+            if(department !== "all") params.department = department;
             app.employees = new app.Collections.Employees(null, {settings: params});
-            //app.employees.fetch();
-            app.employeesView = new app.Views.EmployeesView({collection: app.employees});
-            this.showView(app.employeesView);
+            
+            // Fetch employees
+            app.employees = new app.Collections.Employees(null, {settings: params});
+            util.loading(true);
+            app.employees.fetch({ // TODO: Need error handler
+                complete: function() {util.loading(false);}
+            });
+            
+            var title = util.getDepartmentTitle(department);
+            
+            // Instantiate layout
+            var layout = new Backbone.Layout({
+                template: "browse.html"
+                ,title: title
+                ,views: {
+                    ".breadcrumbs": new app.Views.Breadcrumbs({collection: app.employees, title: title})
+                    ,".sort": new app.Views.SortEmployees({collection: app.employees})
+                    ,".search": new app.Views.Search({collection: app.employees, title: title})
+                    ,".results": new app.Views.Employees({collection: app.employees, title: title})
+                }
+                ,serialize: function() {
+                    return {
+                        title: title
+                    };
+                }
+            });
+            
+            // Show layout
+            this.showView(layout);
         }
-        ,visualize: function(params) { // TODO: Should reuse app.departments, but can't render highcharts without the delay caused by the fetch (needs to be in DOM)
-            var chart;
+        ,visualize: function(params) {
             this.saveRoute("visualize", params);
             
-            if(typeof params === "object" && params.chart !== undefined && params.chart === "salaryGroups") {
+            // If chart is specified
+            var visualization;
+            if(typeof params === "object" && params.chart !== undefined) {
+            
+                // Fetch departments
+                if(app.departments === undefined) {
+                    app.departments = new app.Collections.Departments(null, {settings: params});
+                    util.loading(true);
+                    app.departments.fetch({ // TODO: Need error handler
+                        complete: function() {util.loading(false);}
+                    });
+                }
                 
-                app.departments = /*app.departments ||*/ new app.Collections.Departments(null, {settings: params});
-                app.visualizeView = new app.Views.VisualizeView({collection: app.departments});
-                
-            } else if(typeof params === "object" && params.chart !== undefined && params.chart === "sizeVsDollarsLine") {
-                
-                app.departments = /*app.departments ||*/ new app.Collections.Departments(null, {settings: params});
-                chart = new app.Views.Charts.SizeVsDollarsLine({collection: app.departments});
-                app.visualizeView = new app.Views.VisualizeView({chart: chart});
-                
-            } else if(typeof params === "object" && params.chart !== undefined && params.chart === "dollarsPie") {
-                
-                app.departments = /*app.departments ||*/ new app.Collections.Departments(null, {settings: params});
-                chart = new app.Views.Charts.DollarsPie({collection: app.departments});
-                app.visualizeView = new app.Views.VisualizeView({chart: chart});
-                
-            } else {
-                
-                app.departments = /*app.departments ||*/ new app.Collections.Departments(null, {settings: params});
-                chart = new app.Views.Charts.SizeVsDollarsBar({collection: app.departments});
-                app.visualizeView = new app.Views.VisualizeView({chart: chart});
-                
+                // Which chart is being rendered
+                switch(params.chart) {
+                    case "sizeVsDollarsBar": visualization = new app.Views.Charts.SizeVsDollarsBar({collection: app.departments}); break;
+                    case "sizeVsDollarsLine": visualization = new app.Views.Charts.SizeVsDollarsLine({collection: app.departments}); break;
+                    case "dollarsPie": visualization = new app.Views.Charts.DollarsPie({collection: app.departments}); break;
+                    case "salaryGroups": visualization = new app.Views.SalaryGroups({collection: app.departments}); break;
+                }
             }
-            this.showView(app.visualizeView);
+            // Otherwise go to landing page
+            if( ! visualization) {
+                visualization = new app.Views.VisualizeLanding();
+            }
+            
+            var layout = new Backbone.Layout({
+                template: "visualize.html"
+                ,title: "Visualize"
+                ,views: {
+                    ".visualization": visualization
+                }
+            });
+            
+            // Show layout
+            this.showView(layout);
         }
         /*
          * Switch pages while preserving events
@@ -116,8 +161,17 @@ window.util = window.util || {};
             if(this.currentView) {
                 this.currentView.$el.detach();
             }
-            $("#main").empty().append(view.render().el);
-            $("#tools").empty().append(app.toolsView.render().el);
+            // Content
+            $("#main").empty().append(view.el);
+            view.render();
+            
+            // Tools navbar
+            $("#tools").empty().append(app.toolsView.el);
+            app.toolsView.render();
+            
+            // <title>
+            document.title = view.options.title !== undefined && view.options.title ? view.options.title : $("title").text();
+            
             this.currentView = view;
         }
         /*

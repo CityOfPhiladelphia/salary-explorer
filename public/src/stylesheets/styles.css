@@ -30,8 +30,8 @@ th a { width: 100%; height: 100%; display: inline-block; color: inherit; }
 .table { margin-bottom: 0; }
 
 /* Title & Search */
-#title h3 { margin: 0; }
-#search form { margin: 5px; }
+.title h3 { margin: 0; }
+.search form { margin: 5px; }
 
 /* Phila.gov style */
 .navbar .philagov {

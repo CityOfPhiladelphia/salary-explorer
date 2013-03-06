@@ -1,0 +1,8 @@
+<% var checkActive = function(chart, isDefault) { return (Salaries.router.params.chart !== undefined && Salaries.router.params.chart === chart || Salaries.router.params.chart === undefined && isDefault) ? " class=\"active\"" : ""; } %>
+<ul class="nav nav-tabs">
+    <li<%= checkActive("sizeVsDollarsBar") %>><a href="#visualize?chart=sizeVsDollarsBar">Size vs Dollars (Bar)</a></li>
+    <li<%= checkActive("sizeVsDollarsLine") %>><a href="#visualize?chart=sizeVsDollarsLine">Size vs Dollars (Line)</a></li>
+    <li<%= checkActive("dollarsPie") %>><a href="#visualize?chart=dollarsPie">Dollars (Pie)</a></li>
+    <li<%= checkActive("salaryGroups") %>><a href="#visualize?chart=salaryGroups">Salary Groups</a></li>
+</ul>
+<div class="visualization"></div>

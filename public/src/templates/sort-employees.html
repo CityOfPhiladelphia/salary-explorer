@@ -1,0 +1,27 @@
+<% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; } %>
+<div class="btn-group hidden-tablet hidden-desktop">
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-th-list"></i> Sort <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        
+        <% if(data.settings.department === undefined) { %>
+        <li><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
+            <%= icon(data.sortProps.department.arrow) %>
+        </a></li>
+        <% } %>
+        <li><a href="#<%= data.sortProps.lastname.href %>" data-replace="true">Last Name
+            <%= icon(data.sortProps.lastname.arrow) %>
+        </a></li>
+        <li><a href="#<%= data.sortProps.firstname.href %>" data-replace="true">First Name
+            <%= icon(data.sortProps.firstname.arrow) %>
+        </a></li>
+        <li><a href="#<%= data.sortProps.middleinitial.href %>" data-replace="true">Middle Initial
+            <%= icon(data.sortProps.middleinitial.arrow) %>
+        </a></li>
+        <li><a href="#<%= data.sortProps.title.href %>" data-replace="true">Title
+            <%= icon(data.sortProps.title.arrow) %>
+        </a></li>
+        <li><a href="#<%= data.sortProps.salary.href %>" data-replace="true">Salary
+            <%= icon(data.sortProps.salary.arrow) %>
+        </a></li>
+    </ul>
+</div>

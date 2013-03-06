@@ -1,6 +1,6 @@
 window.jQuery = window.jQuery || {};
 window._ = window._ || {};
-window.Salaries = window.Salaries || {Models: {}, Views: {}, Collections: {}, Routers: {}};
+window.Salaries = window.Salaries || {Models: {}, Views: {}, Layouts: {}, Collections: {}, Routers: {}};
 window.util = window.util || {};
 (function(window, $, _, app, util) {
     
@@ -24,41 +24,27 @@ window.util = window.util || {};
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
     
-    /*util.getSortProps = function(settings) {
-        var sortProps = {}, i = 0;
-        for(i in settings.fields) {
-            sortProps[settings.fields[i]] = {
-                href: (settings.department !== undefined ? "department=" + settings.department : "")
-                    + "&orderby=" + settings.fields[i]
-                    + "&dir=" + (settings.orderby === settings.fields[i] ? (settings.dir === "asc" ? "desc" : "asc") : "asc")
-                    + (settings.search !== undefined && settings.search ? "&search=" + settings.search : "")
-                ,arrow: settings.orderby === settings.fields[i] ? settings.dir : null
-            };
-        }
-        return sortProps;
-    };*/
-    
     util.getSortProps = function(settings, route) {
         var sortProps = {}, i = 0;
         for(i in settings.fields) {
             sortProps[settings.fields[i]] = {
-                href: app.router.buildFragment(route, {orderby: settings.fields[i], dir: (settings.orderby === settings.fields[i] ? (settings.dir === "asc" ? "desc" : "asc") : "asc")}, ["department", "search"])
+                href: app.router.buildFragment(route || app.router.route, {orderby: settings.fields[i], dir: (settings.orderby === settings.fields[i] ? (settings.dir === "asc" ? "desc" : "asc") : "asc")}, ["department", "search"])
                 ,arrow: settings.orderby === settings.fields[i] ? settings.dir : null
             };
         }
         return sortProps;
     };
     
-    /*util.getArrows = function(settings) {
-        var arrows = {}, i = 0;
-        for(i in settings.fields) {
-            arrows[settings.fields[i]] = settings.orderby === settings.fields[i] ? settings.dir : null;
+    util.getDepartmentTitle = function(department) {
+        var title;
+        if(department === "all") {
+            title = "All Employees";
+        } else if(window.codes !== undefined && window.codes.department !== undefined && window.codes.department[department] !== undefined) {
+            title = window.codes.department[department];
+        } else {
+            title = "Salaries"; // Intentionally vague
         }
-        return arrows;
+        return title;
     }
-    
-    util.reverseDir = function(dir) {
-        return dir === "asc" ? "desc" : "asc";
-    }*/
     
 })(window, window.jQuery, window._, window.Salaries, window.util);

@@ -1,0 +1,15 @@
+<% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; }; %>
+<div class="btn-group hidden-tablet hidden-desktop">
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href=""><i class="icon-th-list"></i> Sort <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        <li><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
+            <%= icon(data.sortProps.department.arrow) %>
+        </a></li>
+        <li><a href="#<%= data.sortProps.count.href %>" data-replace="true">Employees
+            <%= icon(data.sortProps.count.arrow) %>
+        </a></li>
+        <li><a href="#<%= data.sortProps.salaries.href %>" data-replace="true">Salaries
+            <%= icon(data.sortProps.salaries.arrow) %>
+        </a></li>
+    </ul>
+</div>

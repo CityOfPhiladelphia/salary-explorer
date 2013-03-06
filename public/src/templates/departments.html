@@ -1,0 +1,34 @@
+<% var icon = function(dir) { return dir === "asc" ? "<i class=\"icon-chevron-up\"></i>" : dir === "desc" ? "<i class=\"icon-chevron-down\"></i>" : ""; }; %>
+<% if(data.rows !== undefined && data.rows.length) { %>
+    <table class="table table-condensed table-striped table-bordered no-more-tables">
+        <thead>
+            <tr>
+                <th><a href="#<%= data.sortProps.department.href %>" data-replace="true">Department
+                    <%= icon(data.sortProps.department.arrow) %>
+                </a></th>
+                <th><a href="#<%= data.sortProps.count.href %>" data-replace="true">Employees
+                    <%= icon(data.sortProps.count.arrow) %>
+                </a></th>
+                <th><a href="#<%= data.sortProps.salaries.href %>" data-replace="true">Salaries
+                    <%= icon(data.sortProps.salaries.arrow) %>
+                </a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="all">
+                <td data-title="Department"><a href="#browse/all">ALL EMPLOYEES</a></td>
+                <td data-title="Employees"><%= data.count %></td>
+                <td data-title="Salaries"><%= util.currency("$", data.sum) %></td>
+            </tr>
+        <% _.each(data.rows, function(row) { %>
+            <% var count = Math.round(row.count/data.count*100*100)/100; %>
+            <% var salaries = Math.round(row.salaries/data.sum*100*100)/100; %>
+            <tr>
+                <td data-title="Department"><a href="#browse/<%= row.departmentid %>"><%= row.department %></a></td>
+                <td data-title="Employees"><%= row.count %></td>
+                <td data-title="Salaries"><%= util.currency("$", row.salaries) %></td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+<% } %>
