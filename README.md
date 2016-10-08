@@ -1,18 +1,7 @@
-# README for a newly created project.
+# Salary Explorer
+Custom employee salaries explorer from 2013 that never quite launched.
+Instead, we launched in 2016 using a [DataLens](https://data.phila.gov/view/5prt-27te).
+[data.philly.com](http://data.philly.com/) has some interesting visualizations
+of our salary data as well.
 
-There are a couple of things you should do first, before you can use all of Git's power:
-
-  * Add a remote to this project: in the Cloud9 IDE command line, you can execute the following commands
-    `git remote add [remote name] [remote url (eg. 'git@github.com:/ajaxorg/node_chat')]` [Enter]
-  * Create new files inside your project
-  * Add them to to Git by executing the following command
-    `git add [file1, file2, file3, ...]` [Enter]
-  * Create a commit which can be pushed to the remote you just added
-    `git commit -m 'added new files'` [Enter]
-  * Push the commit the remote
-    `git push [remote name] master` [Enter]
-
-That's it! If this doesn't work for you, please visit the excellent resources from [Github.com](http://help.github.com) and the [Pro Git](http://http://progit.org/book/) book.
-If you can't find your answers there, feel free to ask us via Twitter (@cloud9ide), [mailing list](groups.google.com/group/cloud9-ide) or IRC (#cloud9ide on freenode).
-
-Happy coding!
+![screenshot of salary groups visualization](http://i.imgur.com/g5ySo29.png)
